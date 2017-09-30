@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name" translatable="false">MultiQuizPro</string>
+    <string name="question" >Question</string>
+    <string name="check" >Check</string>
+    <string name="correct">Very Good!</string>
+    <string name="incorrect">Incorrect...</string>
+
+    <array name="all_questions">
+        <item>What is the capital of Bhutan?;Ouagadougou;Phnom Penh;*Thimphu;Zgighiti</item>
+        <item>What is the capital of France?;Budapest;*Paris;Amsterdam;Split</item>
+    </array>
+
+    <integer name="correct_answer">3</integer>
+    <string name="next">Next</string>
+    <string name="finish">Finish</string>
+    <string name="previous">Previous</string>
+</resources>
