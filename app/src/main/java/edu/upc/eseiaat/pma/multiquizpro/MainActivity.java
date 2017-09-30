@@ -75,11 +75,14 @@ public class MainActivity extends AppCompatActivity {
     private void checkResults() {
         int correct=0;
         int incorrect=0;
-        for (boolean b : answer_is_correct){
-            if (b) correct++;
+        int no_contestadas=0;
+        for (int i=0; i< all_questions.length; i++){
+            if (answer_is_correct[i]) correct++;
+            if (answer[i] == -1) no_contestadas++;
             else incorrect++;
         }
-        String result= String.format("Correct = %d -- Incorrect = %d", correct, incorrect);
+        String result= String.format("Correct = %d\nIncorrect = %d\nNo answered = %d\n",
+                correct, incorrect, no_contestadas);
         Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
         finish();
     }
