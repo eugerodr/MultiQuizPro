@@ -1,5 +1,7 @@
 package edu.upc.eseiaat.pma.multiquizpro;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -35,13 +37,7 @@ public class MainActivity extends AppCompatActivity {
         btn_prev = (Button) findViewById(R.id.btn_prev);
 
         all_questions = getResources().getStringArray(R.array.all_questions);
-        answer_is_correct = new boolean[all_questions.length];
-        answer = new int[all_questions.length];
-        for (int i=0; i< answer.length; i++){
-            answer[i]=-1;
-        }
-        current_question=0;
-        showQuestion();
+        startOver();
 
         btn_next.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +68,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void startOver() {
+        answer_is_correct = new boolean[all_questions.length];
+        answer = new int[all_questions.length];
+        for (int i=0; i< answer.length; i++){
+            answer[i]=-1;
+        }
+        current_question=0;
+        showQuestion();
+    }
+
     private void checkResults() {
         int correct=0;
         int incorrect=0;
@@ -81,10 +87,27 @@ public class MainActivity extends AppCompatActivity {
             if (answer[i] == -1) no_contestadas++;
             else incorrect++;
         }
-        String result= String.format("Correct = %d\nIncorrect = %d\nNo answered = %d\n",
+        String message = String.format("Correct = %d\nIncorrect = %d\nNo answered = %d\n",
                 correct, incorrect, no_contestadas);
-        Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
-        finish();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.results);
+        builder.setMessage(message);
+        builder.setCancelable(false);
+        builder.setPositiveButton(R.string.finish, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.setNegativeButton(R.string.start_over, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startOver();
+            }
+        });
+        builder.create().show();
+
     }
 
     private void checkAnswer() {

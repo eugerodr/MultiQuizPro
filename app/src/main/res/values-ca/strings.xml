@@ -7,4 +7,6 @@
     <string name="next">Següent</string>
     <string name="previous">Anterior</string>
     <string name="question">Pregunta</string>
+    <string name="results">Resultats</string>
+    <string name="start_over">Comença de nou</string>
 </resources>
