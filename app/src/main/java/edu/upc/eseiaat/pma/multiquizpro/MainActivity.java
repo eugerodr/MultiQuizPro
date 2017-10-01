@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String CURRENT_QUESTION = "current_question";
     public static final String ANSWER_IS_CORRECT = "answer_is_correct";
     public static final String ANSWER = "answer";
+
     private int ids_answers[] = {
             R.id.answer_1, R.id.answer_2, R.id.answer_3, R.id.answer_4
     };
@@ -34,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        Log.i("lifecycle", "onSaveInstanceState");
         super.onSaveInstanceState(outState);
 
         outState.putInt(CORRECT_ANSWER, correct_answer);
@@ -44,7 +47,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStop() {
+        Log.i("lifecycle", "onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        Log.i("lifecycle", "onStart");
+        super.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.i("lifecycle", "onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("lifecycle", "onCreate");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -54,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         btn_prev = (Button) findViewById(R.id.btn_prev);
 
         all_questions = getResources().getStringArray(R.array.all_questions);
-        startOver();
 
         if (savedInstanceState == null){
             startOver();
@@ -64,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
             current_question=state.getInt(CURRENT_QUESTION);
             answer_is_correct=state.getBooleanArray(ANSWER_IS_CORRECT);
             answer=state.getIntArray(ANSWER);
+            showQuestion();
         }
 
         btn_next.setOnClickListener(new View.OnClickListener() {
@@ -106,16 +129,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkResults() {
-        int correct=0;
-        int incorrect=0;
-        int no_contestadas=0;
-        for (int i=0; i< all_questions.length; i++){
-            if (answer_is_correct[i]) correct++;
-            if (answer[i] == -1) no_contestadas++;
-            else incorrect++;
+        int correctas = 0, incorrectas = 0, nocontestadas = 0;
+        for (int i = 0; i < all_questions.length; i++) {
+            if (answer_is_correct[i]) correctas++;
+            else if (answer[i] == -1) nocontestadas++;
+            else incorrectas++;
         }
-        String message = String.format("Correct = %d\nIncorrect = %d\nNo answered = %d\n",
-                correct, incorrect, no_contestadas);
+
+        String message =
+                String.format("Correctas: %d\nIncorrectas: %d\nNo contestadas: %d\n",
+                        correctas, incorrectas, nocontestadas);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.results);
@@ -134,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         builder.create().show();
-
     }
 
     private void checkAnswer() {
@@ -154,8 +176,8 @@ public class MainActivity extends AppCompatActivity {
         String[] parts = q.split(";");
 
         group.clearCheck();
-        text_question.setText(parts[0]);
 
+        text_question.setText(parts[0]);
         for (int i= 0; i<ids_answers.length; i++) {
             RadioButton rb = (RadioButton) findViewById(ids_answers[i]);
             String ans = parts[i + 1];
